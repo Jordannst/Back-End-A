@@ -1,9 +1,26 @@
 const express = require("express");
 const app = express();
-const port = 3003;
-const { hello, greetings } = require("./helloWorld");
+const morgan = require("morgan");
+const errorhandler = require("errorhandler");
+const port = 3000;
 const moment = require("moment");
+const { hello, greetings } = require("./helloWorld");
 
+// Middleware
+const log = (req, res, next) => {
+  console.log(
+    moment().format("MMMM Do YYYY, h:mm:ss a") +
+      " " +
+      req.originalUrl +
+      " " +
+      req.method
+  );
+  next();
+};
+
+app.use(morgan("tiny"));
+
+// Routing
 app.get("/", (req, res) => res.send("Hello World"));
 
 app.get("/about", (req, res) =>
@@ -30,6 +47,16 @@ app.get("/post", (req, res) => {
   const { page, sort } = req.query;
   res.send(`Query yang didapatkan adalah:  ${page}, sort: ${sort}`);
 });
+
+// Error Handling with Middlewaree
+app.use((req, res, next) => {
+  res.status(404).json({
+    status: "Error",
+    message: "Tidak ditemukan",
+  });
+});
+
+app.use(errorhandler());
 
 const hostname = "127.0.0.1";
 app.listen(port, hostname, () =>
