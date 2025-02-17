@@ -22,8 +22,14 @@ app.patch("/contohpatch", (req, res) =>
 );
 app.all("/universal", (req, res) => res.send(`Request Method ${req.method}`)); // Method universal/ Semua Method
 
-// Routing dinamis menggunakan Params
+// 1. Routing dinamis menggunakan Params
 app.get("/post/:id", (req, res) => res.send(`Artikel ke - ${req.params.id}`));
+
+// 2. Routing dinamsi menggunakan Query String
+app.get("/post", (req, res) => {
+  const { page, sort } = req.query;
+  res.send(`Query yang didapatkan adalah:  ${page}, sort: ${sort}`);
+});
 
 const hostname = "127.0.0.1";
 app.listen(port, hostname, () =>
