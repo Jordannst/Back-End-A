@@ -9,7 +9,7 @@ app.get("/users", (req, res) => {
   if (users.length > 0) {
     res.status(200).json(users);
   } else {
-    res.status(404).json({
+    res.status(500).json({
       status: "Error",
       message: "Terjadi kesalahan pada server",
     });
