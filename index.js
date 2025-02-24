@@ -20,8 +20,10 @@ const log = (req, res, next) => {
 app.use(morgan("tiny"));
 // app.use(errorhandler());
 
-// body-parser
+// body-parser urlencoded
 app.use(express.urlencoded({ extended: true }));
+// body-parser json
+app.use(express.json());
 
 // Routing
 app.use(routers);
