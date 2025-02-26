@@ -1,5 +1,12 @@
 const express = require("express");
 const routers = express.Router();
+const path = require("path");
+// ROuting
+routers.get("/download", (req, res) => {
+  const filename = "dummy.png";
+  // res.download(path.join(__dirname, filename), filename);
+  res.download(path.join(__dirname, "/download", filename));
+});
 
 routers.get("/", (req, res) => res.send("Hello World"));
 routers.get("/about", (req, res) =>

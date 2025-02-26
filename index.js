@@ -5,6 +5,7 @@ const errorhandler = require("errorhandler");
 const moment = require("moment");
 const routers = require("./routers");
 const { hello, greetings } = require("./helloWorld");
+const Path = require("path");
 
 // Middleware
 const log = (req, res, next) => {
@@ -19,6 +20,8 @@ const log = (req, res, next) => {
 };
 app.use(morgan("tiny"));
 // app.use(errorhandler());
+
+app.use(express.static(Path.join(__dirname, "public"))); // Static File tida perlu melalui routing
 
 // body-parser urlencoded
 app.use(express.urlencoded({ extended: true }));
