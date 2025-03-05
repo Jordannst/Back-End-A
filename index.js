@@ -6,8 +6,10 @@ const moment = require("moment");
 const routers = require("./routers");
 const { hello, greetings } = require("./helloWorld");
 const Path = require("path");
+const cors = require("cors");
 
 // Middleware
+
 const log = (req, res, next) => {
   console.log(
     moment().format("MMMM Do YYYY, h:mm:ss a") +
@@ -27,6 +29,14 @@ app.use(express.static(Path.join(__dirname, "public"))); // Static File tida per
 app.use(express.urlencoded({ extended: true }));
 // body-parser json
 app.use(express.json());
+
+// Cors
+app.use(
+  cors({
+    origin: "http://127.0.0.1:5500",
+    methods: ["GET", "PUT"], // access control allow method
+  })
+);
 
 // Routing
 app.use(routers);

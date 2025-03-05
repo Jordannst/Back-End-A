@@ -50,6 +50,15 @@ routers.get("/about", (req, res) =>
     data: [],
   })
 );
+
+routers.put("/about", (req, res) =>
+  res.status(200).json({
+    status: "success",
+    message: "About page",
+    data: ["Method PUT"],
+  })
+);
+
 routers.post("/contoh", (req, res) => res.send("request method POST"));
 routers.put("/contoh", (req, res) => res.send("Request method PUT"));
 routers.delete("/contoh", (req, res) => res.send("Request method DELETE"));
