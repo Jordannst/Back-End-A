@@ -3,6 +3,7 @@ const routers = express.Router();
 const path = require("path");
 const fs = require("fs");
 const multer = require("multer");
+const client = require("./mongodb.js");
 
 const imageFilter = (req, file, cb) => {
   if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
@@ -14,6 +15,27 @@ const imageFilter = (req, file, cb) => {
 const upload = multer({ dest: "public", fileFilter: imageFilter });
 
 // Routing
+
+// mongodb
+routers.get("/users", async (req, res) => {
+  try {
+    const db = client.db("latihan");
+    const users = await db.collection("users").find().toArray();
+    res.json({
+      status: "Success",
+      message: "List users",
+      data: users,
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    res.json({
+      status: "Error",
+    });
+  }
+});
+
 routers.post("/upload", upload.single("file"), (req, res) => {
   const file = req.file;
   console.log(file);
@@ -43,6 +65,7 @@ routers.post("/login", (req, res) => {
   });
 });
 routers.get("/", (req, res) => res.send("Hello World"));
+
 routers.get("/about", (req, res) =>
   res.status(200).json({
     status: "success",
