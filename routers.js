@@ -4,6 +4,8 @@ const path = require("path");
 const fs = require("fs");
 const multer = require("multer");
 const client = require("./mongodb.js");
+// const { ObjectId } = require("mongodb");
+const ObjectId = require("mongodb").ObjectId;
 
 const imageFilter = (req, file, cb) => {
   if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
@@ -35,6 +37,29 @@ routers.get("/users", async (req, res) => {
     });
   }
 });
+
+//get single user
+routers.get("/users/:id", async (req, res) => {
+  try {
+    const db = client.db("latihan");
+    const users = await db.collection("users").findOne({
+      _id: new ObjectId(req.params.id)
+    })
+    res.status(200).json({
+      status: "success",
+      message: "Get single user",
+      data: users,
+    })
+  }
+  catch (error) {
+    console.error(error)
+    res.status(500).json({
+      status: "error",
+    })
+  }
+})
+
+
 
 routers.post("/upload", upload.single("file"), (req, res) => {
   const file = req.file;
