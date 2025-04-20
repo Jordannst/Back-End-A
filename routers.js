@@ -39,40 +39,42 @@ routers.get("/users", async (req, res) => {
 // Get order user join/aggregation
 routers.get("/users/orders", async (req, res) => {
   try {
-    const result = await db.collection("users").aggregate([
-      {
-        $lookup: {
-          from: "order",  
-          localField: "_id",
-          foreignField: "userId",
-          as: "orders"
-        }
-      },
-      {
-        $project: {
-          name: 1,
-          age: 1,
-          status: 1,
-          orders: {
-            _id: 1,
-            userId: 1,
-            product: 1,
-            price: 1
-          }
-        }
-      }
-    ]).toArray();
-    
+    const result = await db
+      .collection("users")
+      .aggregate([
+        {
+          $lookup: {
+            from: "order",
+            localField: "_id",
+            foreignField: "userId",
+            as: "orders",
+          },
+        },
+        {
+          $project: {
+            name: 1,
+            age: 1,
+            status: 1,
+            orders: {
+              _id: 1,
+              userId: 1,
+              product: 1,
+              price: 1,
+            },
+          },
+        },
+      ])
+      .toArray();
+
     res.status(200).json({
       status: "success",
-      message: "Get users with their orders",
-      data: result
+      message: "Get users join orders",
+      data: result,
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({
       status: "error",
-      message: "Failed to get users with orders"
     });
   }
 });
@@ -96,19 +98,17 @@ routers.get("/users/:id", async (req, res) => {
   }
 });
 
-
 // Insert One & Insert Many
 routers.post("/users", async (req, res) => {
   let result;
   try {
-    if (Array.isArray(req.body)){
+    if (Array.isArray(req.body)) {
       result = await db.collection("users").insertMany(req.body);
       res.status(200).json({
         status: "success",
         message: "Insert many users",
         data: result,
       });
-
     } else {
       result = await db.collection("users").insertOne(req.body);
       res.status(200).json({
@@ -117,7 +117,6 @@ routers.post("/users", async (req, res) => {
         data: result,
       });
     }
-    
   } catch (error) {
     console.error(error);
     res.status(500).json({
@@ -168,8 +167,6 @@ routers.delete("/users/:id", async (req, res) => {
     });
   }
 });
-
-
 
 // Upload file
 routers.post("/upload", upload.single("file"), (req, res) => {
